@@ -22,17 +22,21 @@ public class ProductService {
 
 		//Implement request object field validation
 
+		var productToSave = mapToProductEntity(productDTO);
+
+		return productRepository.save(productToSave).getProductId();
+	}
+
+	public ProductEntity mapToProductEntity(ProductDTO productDTO) {
 		//If we are provided with unique product ID we store it, if not, we create our own and return it to caller
 		UUID productId = productDTO.productId() == null ? UUID.randomUUID() : productDTO.productId();
 
 		//Sometimes I use Mapstruct for mapping needs but for MVP manual mapping will suffice
-		var productToSave = ProductEntity.builder()
+		return ProductEntity.builder()
 				.productId(productId)
 				.productName(productDTO.productName())
 				.productPrice(productDTO.productPrice())
 				.priceCurrency(productDTO.priceCurrency())
 				.build();
-
-		return productRepository.save(productToSave).getProductId();
 	}
 }

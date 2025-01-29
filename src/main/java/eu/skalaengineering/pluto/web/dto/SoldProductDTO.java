@@ -2,8 +2,8 @@ package eu.skalaengineering.pluto.web.dto;
 
 import java.util.UUID;
 
-public record SoldProductsDTO(
+public record SoldProductDTO(
 		UUID productId,
-		String quantity
+		Long quantity
 ) {
 }
