@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: PLT-0002
+      author: Elgars
+      comment: Add `product` table
+      changes:
+        - sqlFile:
+            path: db/scripts/V1.00__add_product_table.sql
