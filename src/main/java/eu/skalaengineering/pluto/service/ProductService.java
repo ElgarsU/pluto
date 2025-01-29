@@ -20,7 +20,7 @@ public class ProductService {
 	@Transactional
 	public UUID saveProduct(ProductDTO productDTO) {
 
-		//Implement request field validation
+		//Implement request object field validation
 
 		//If we are provided with unique product ID we store it, if not, we create our own and return it to caller
 		UUID productId = productDTO.productId() == null ? UUID.randomUUID() : productDTO.productId();
