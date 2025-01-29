@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS sales_transaction
 (
-    id           IDENTITY    NOT NULL,
-    total_amount VARCHAR(10) NOT NULL,
+    id           IDENTITY         NOT NULL,
+    total_amount DOUBLE PRECISION NOT NULL,
 
-    created      TIMESTAMP   NOT NULL,
+    created      TIMESTAMP        NOT NULL,
     modified     TIMESTAMP,
 
     CONSTRAINT sales_transaction_id_primary_key PRIMARY KEY (id)

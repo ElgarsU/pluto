@@ -80,7 +80,7 @@ public class CustomerActionService {
 										var newProduct = ProductEntity.builder()
 												.productId(productDTO.productId())
 												.productName("Generic name")
-												.productPrice("1")
+												.productPrice(1)
 												.priceCurrency(Currency.EUR)
 												.build();
 										productRepository.save(newProduct);

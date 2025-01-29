@@ -40,7 +40,7 @@ public class ProductEntity extends Auditable {
 	@Column(name = "product_price", nullable = false)
 	@SuppressWarnings("squid:S1135") //Suppress SonarLint TODO warnings for development phase
 	//TODO implement a more advanced price/currency type based on BigDecimal
-	private String productPrice;
+	private double productPrice;
 
 	@Column(name = "price_currency", nullable = false)
 	@Enumerated(EnumType.STRING)

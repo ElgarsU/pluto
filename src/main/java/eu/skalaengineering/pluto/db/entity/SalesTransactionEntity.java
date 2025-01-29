@@ -31,7 +31,7 @@ public class SalesTransactionEntity extends Auditable {
 	private Long id;
 
 	@Column(name = "total_amount")
-	private String totalAmount;
+	private double totalAmount;
 
 	@OneToMany(mappedBy = "salesTransaction", cascade = CascadeType.PERSIST)
 	private Set<SoldProductsEntity> soldProducts;

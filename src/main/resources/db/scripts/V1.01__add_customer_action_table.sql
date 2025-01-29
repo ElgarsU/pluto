@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS customer_action
     id          IDENTITY    NOT NULL,
     action_type VARCHAR(70) NOT NULL,
     customer_id UUID        NOT NULL,
-    product_id  UUID        NOT NULL,
+    product_id  UUID,
     session_id  UUID,
     created     TIMESTAMP   NOT NULL,
     modified    TIMESTAMP,

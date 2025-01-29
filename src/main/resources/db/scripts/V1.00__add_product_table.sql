@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS product
 (
-    id                IDENTITY     NOT NULL,
-    product_id        UUID         NOT NULL,
-    product_name      VARCHAR(500) NOT NULL,
-    product_price     VARCHAR(20)  NOT NULL,
-    price_currency    VARCHAR(10)  NOT NULL,
-    created           TIMESTAMP    NOT NULL,
+    id                IDENTITY          NOT NULL,
+    product_id        UUID              NOT NULL,
+    product_name      VARCHAR(500)      NOT NULL,
+    product_price     DOUBLE PRECISION  NOT NULL,
+    price_currency    VARCHAR(10)       NOT NULL,
+    created           TIMESTAMP         NOT NULL,
     modified          TIMESTAMP,
 
     CONSTRAINT product_id_primary_key PRIMARY KEY (id),
