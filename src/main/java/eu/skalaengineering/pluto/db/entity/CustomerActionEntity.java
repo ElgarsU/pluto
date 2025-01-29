@@ -48,7 +48,7 @@ public class CustomerActionEntity extends Auditable {
 
 	@OneToOne()
 	@JoinColumn(name = "sales_transaction_id")
-	private SalesTransactionDataEntity salesTransaction;
+	private SalesTransactionEntity salesTransaction;
 
 	@Override
 	public int hashCode() {

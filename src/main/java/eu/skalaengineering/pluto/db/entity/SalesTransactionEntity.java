@@ -20,10 +20,10 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "sales_transaction_data")
-@Entity(name = "SalesTransactionData")
+@Table(name = "sales_transaction")
+@Entity(name = "SalesTransaction")
 @SuperBuilder
-public class SalesTransactionDataEntity extends Auditable {
+public class SalesTransactionEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +33,14 @@ public class SalesTransactionDataEntity extends Auditable {
 	@Column(name = "total_amount")
 	private String totalAmount;
 
-	@OneToMany(mappedBy = "salesData", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "salesTransaction", cascade = CascadeType.PERSIST)
 	private Set<SoldProductsEntity> soldProducts;
 
 	public void addSoldProduct(SoldProductsEntity soldProduct) {
 		if (soldProduct == null) {
 			return;
 		}
-		soldProduct.setSalesData(this);
+		soldProduct.setSalesTransaction(this);
 		this.soldProducts.add(soldProduct);
 	}
 
@@ -60,7 +60,7 @@ public class SalesTransactionDataEntity extends Auditable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		SalesTransactionDataEntity other = (SalesTransactionDataEntity) obj;
+		SalesTransactionEntity other = (SalesTransactionEntity) obj;
 		return id != null && id.equals(other.id);
 	}
 }

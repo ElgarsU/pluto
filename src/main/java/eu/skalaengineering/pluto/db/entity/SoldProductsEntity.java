@@ -38,8 +38,8 @@ public class SoldProductsEntity extends Auditable {
 	private ProductEntity product;
 
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "sales_data_id")
-	private SalesTransactionDataEntity salesData;
+	@JoinColumn(name = "sales_transaction_id")
+	private SalesTransactionEntity salesTransaction;
 
 	@Override
 	public int hashCode() {
