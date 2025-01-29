@@ -1,15 +1,12 @@
 package eu.skalaengineering.pluto.db.entity;
 
-import eu.skalaengineering.pluto.enums.ActionType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,42 +14,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.UUID;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "customer_action")
-@Entity(name = "CustomerAction")
+@Table(name = "sales_transaction_data")
+@Entity(name = "SalesTransactionData")
 @SuperBuilder
-public class CustomerActionEntity extends Auditable {
+public class SalesTransactionDataEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false, updatable = false)
 	private Long id;
 
-	@Column(name = "action_type")
-	@Enumerated(EnumType.STRING)
-	private ActionType actionType;
+	@Column(name = "total_amount")
+	private String totalAmount;
 
-	@Column(name = "customer_id")
-	private UUID customerId;
+	@OneToMany(mappedBy = "salesData", cascade = CascadeType.PERSIST)
+	private Set<SoldProductsEntity> soldProducts;
 
-	@Column(name = "product_id")
-	private UUID productId;
-
-	@Column(name = "session_id")
-	private UUID sessionId;
-
-	@OneToOne()
-	@JoinColumn(name = "sales_transaction_id")
-	private SalesTransactionDataEntity salesTransaction;
+	public void addSoldProduct(SoldProductsEntity soldProduct) {
+		if (soldProduct == null) {
+			return;
+		}
+		soldProduct.setSalesData(this);
+		this.soldProducts.add(soldProduct);
+	}
 
 	@Override
 	public int hashCode() {
-		return 29;
+		return 31;
 	}
 
 	@Override
@@ -66,7 +60,7 @@ public class CustomerActionEntity extends Auditable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		CustomerActionEntity other = (CustomerActionEntity) obj;
+		SalesTransactionDataEntity other = (SalesTransactionDataEntity) obj;
 		return id != null && id.equals(other.id);
 	}
 }

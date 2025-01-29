@@ -1,14 +1,13 @@
 package eu.skalaengineering.pluto.db.entity;
 
-import eu.skalaengineering.pluto.enums.ActionType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,42 +16,34 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "customer_action")
-@Entity(name = "CustomerAction")
+@Table(name = "sold_products")
+@Entity(name = "SoldProducts")
 @SuperBuilder
-public class CustomerActionEntity extends Auditable {
+public class SoldProductsEntity extends Auditable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false, updatable = false)
 	private Long id;
 
-	@Column(name = "action_type")
-	@Enumerated(EnumType.STRING)
-	private ActionType actionType;
-
-	@Column(name = "customer_id")
-	private UUID customerId;
-
-	@Column(name = "product_id")
-	private UUID productId;
-
-	@Column(name = "session_id")
-	private UUID sessionId;
+	@Column(name = "quantity")
+	private Long quantity;
 
 	@OneToOne()
-	@JoinColumn(name = "sales_transaction_id")
-	private SalesTransactionDataEntity salesTransaction;
+	@JoinColumn(name = "product_id")
+	private ProductEntity product;
+
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "sales_data_id")
+	private SalesTransactionDataEntity salesData;
 
 	@Override
 	public int hashCode() {
-		return 29;
+		return 31;
 	}
 
 	@Override
@@ -66,7 +57,7 @@ public class CustomerActionEntity extends Auditable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		CustomerActionEntity other = (CustomerActionEntity) obj;
+		SoldProductsEntity other = (SoldProductsEntity) obj;
 		return id != null && id.equals(other.id);
 	}
 }
