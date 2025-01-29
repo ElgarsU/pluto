@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: PLT-0005
+      author: Elgars
+      comment: Add test data in DB
+      contextFilter: development
+      changes:
+        - sqlFile:
+            path: db/scripts/V1.03__add_test_data.sql
