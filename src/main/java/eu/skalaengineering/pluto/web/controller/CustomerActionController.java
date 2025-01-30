@@ -14,7 +14,7 @@ import static eu.skalaengineering.pluto.config.ApiConstants.SECURE_API_PATH;
 
 @RestController
 @RequestMapping(SECURE_API_PATH)
-@Tag(name = "Customer action controller")
+@Tag(name = "Customer action API")
 public class CustomerActionController {
 
 	private final CustomerActionService customerActionService;

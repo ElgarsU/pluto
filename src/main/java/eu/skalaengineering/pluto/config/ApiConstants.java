@@ -15,5 +15,10 @@ public class ApiConstants {
 	public static final String GET_ALL_PRODUCTS_V1_API_PATH = SECURE_V1_API + PRODUCT_API_PATH + "/get-all";
 
 	public static final String CUSTOMER_ACTION_API_PATH = "/customer-actions";
-	public static final String LOG_CUSTOMER_ACTION_V1_API_PATH = SECURE_API_PATH + API_VERSION_V1 + CUSTOMER_ACTION_API_PATH + "/log";
+	public static final String LOG_CUSTOMER_ACTION_V1_API_PATH = SECURE_V1_API + CUSTOMER_ACTION_API_PATH + "/log";
+
+	public static final String CONVERSION_API_PATH = "/cenversion";
+	public static final String TOTAL_SALES_V1_API_PATH = SECURE_V1_API + CONVERSION_API_PATH + "/total-sales";
+
+
 }
