@@ -32,4 +32,4 @@ management:
         include: info, health
 
 springdoc:
-  show-actuator: true
+  show-actuator: false

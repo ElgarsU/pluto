@@ -6,6 +6,8 @@ import eu.skalaengineering.pluto.web.dto.ProductDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,5 +40,17 @@ public class ProductService {
 				.productPrice(productDTO.productPrice())
 				.priceCurrency(productDTO.priceCurrency())
 				.build();
+	}
+
+	public List<ProductDTO> getAllProducts() {
+		var productEntities = productRepository.findAll();
+		List<ProductDTO> products = new ArrayList<>();
+		productEntities.forEach(product -> products.add(ProductDTO.builder()
+				.productId(product.getProductId())
+				.productName(product.getProductName())
+				.productPrice(product.getProductPrice())
+				.priceCurrency(product.getPriceCurrency())
+				.build()));
+		return products;
 	}
 }
