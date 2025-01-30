@@ -17,8 +17,9 @@ public class ApiConstants {
 	public static final String CUSTOMER_ACTION_API_PATH = "/customer-actions";
 	public static final String LOG_CUSTOMER_ACTION_V1_API_PATH = SECURE_V1_API + CUSTOMER_ACTION_API_PATH + "/log";
 
-	public static final String CONVERSION_API_PATH = "/cenversion";
+	public static final String CONVERSION_API_PATH = "/conversion";
 	public static final String TOTAL_SALES_V1_API_PATH = SECURE_V1_API + CONVERSION_API_PATH + "/total-sales";
+	public static final String CONVERSION_RATE_V1_API_PATH = SECURE_V1_API + CONVERSION_API_PATH + "/conversion-rate";
 
 
 }

@@ -1,6 +1,8 @@
 package eu.skalaengineering.pluto.web.controller;
 
+import eu.skalaengineering.pluto.enums.ConversionType;
 import eu.skalaengineering.pluto.service.SalesConversionService;
+import eu.skalaengineering.pluto.web.dto.ConversionRateDTO;
 import eu.skalaengineering.pluto.web.dto.TotalSalesDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+import static eu.skalaengineering.pluto.config.ApiConstants.CONVERSION_RATE_V1_API_PATH;
 import static eu.skalaengineering.pluto.config.ApiConstants.SECURE_API_PATH;
 import static eu.skalaengineering.pluto.config.ApiConstants.TOTAL_SALES_V1_API_PATH;
 
@@ -34,6 +38,16 @@ public class SalesConversionController {
 															@Parameter(description = "End of the period (YYYY-MM-DDTHH:MM:SS)", example = "2025-01-31T00:00:00")
 															@RequestParam(defaultValue = "2025-01-31T00:00:00") LocalDateTime periodEnd) {
 		var response = salesConversionService.getTotalSalesInPeriod(periodStart, periodEnd);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping(CONVERSION_RATE_V1_API_PATH)
+	@Operation(description = "Returns conversion rate for provided type and product")
+	public ResponseEntity<ConversionRateDTO> getConversionRate(@Parameter(description = "Conversion type for what to calculate conversion")
+															   @RequestParam() ConversionType conversionType,
+															   @Parameter(description = "Product ID for which to calculate requested conversion (empty for `CHECKOUT_PURCHASED`)", example = "b3d5dc4a-95aa-4288-a075-cf876d702f0b")
+															   @RequestParam(required = false) UUID productId) {
+		var response = salesConversionService.getConversionRate(conversionType, productId);
 		return ResponseEntity.ok(response);
 	}
 }

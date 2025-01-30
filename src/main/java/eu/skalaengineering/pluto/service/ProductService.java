@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,33 +25,39 @@ public class ProductService {
 
 		//Implement request object field validation
 
-		var productToSave = mapToProductEntity(productDTO);
-
-		return productRepository.save(productToSave).getProductId();
-	}
-
-	public ProductEntity mapToProductEntity(ProductDTO productDTO) {
 		//If we are provided with unique product ID we store it, if not, we create our own and return it to caller
 		UUID productId = productDTO.productId() == null ? UUID.randomUUID() : productDTO.productId();
 
 		//Sometimes I use Mapstruct for mapping needs but for MVP manual mapping will suffice
-		return ProductEntity.builder()
+		var productToSave = ProductEntity.builder()
 				.productId(productId)
 				.productName(productDTO.productName())
 				.productPrice(productDTO.productPrice())
 				.priceCurrency(productDTO.priceCurrency())
 				.build();
+
+		return productRepository.save(productToSave).getProductId();
 	}
 
 	public List<ProductDTO> getAllProducts() {
 		var productEntities = productRepository.findAll();
 		List<ProductDTO> products = new ArrayList<>();
-		productEntities.forEach(product -> products.add(ProductDTO.builder()
-				.productId(product.getProductId())
-				.productName(product.getProductName())
-				.productPrice(product.getProductPrice())
-				.priceCurrency(product.getPriceCurrency())
-				.build()));
+		productEntities.forEach(product -> products.add(mapToProductDto(product)));
 		return products;
+	}
+
+
+	public Optional<ProductEntity> getProductById(UUID productId) {
+		return productRepository.findByProductId(productId);
+	}
+
+	//This one is extracted to make getAllProducts() method more concise
+	private ProductDTO mapToProductDto(ProductEntity entity) {
+		return ProductDTO.builder()
+				.productId(entity.getProductId())
+				.productName(entity.getProductName())
+				.productPrice(entity.getProductPrice())
+				.priceCurrency(entity.getPriceCurrency())
+				.build();
 	}
 }

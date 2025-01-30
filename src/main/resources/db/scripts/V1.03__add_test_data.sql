@@ -39,6 +39,16 @@ VALUES ('CHECKOUT_STARTED',
         RANDOM_UUID(),
         now());
 
+INSERT INTO customer_action (action_type, customer_id, product_id, session_id, created)
+VALUES ('CHECKOUT_STARTED',
+        (SELECT customer_id
+         FROM customer_action
+         WHERE action_type = 'PRODUCT_ADDED_TO_CART'
+           AND product_id = (SELECT product_id FROM product WHERE product_name = 'Laptop')),
+        null,
+        'b3d5dc4a-95aa-4288-a075-cf876d702f0b',
+        now());
+
 --Customer action - sales
 INSERT INTO sales_transaction (total_amount, created)
 VALUES (200, now());
@@ -57,7 +67,7 @@ VALUES (1,
 
 INSERT INTO customer_action (action_type, customer_id, product_id, session_id, sales_transaction_id, created)
 VALUES ('PURCHASE_COMPLETED',
-        (SELECT customer_id FROM customer_action WHERE action_type = 'CHECKOUT_STARTED'),
+        (SELECT customer_id FROM customer_action WHERE session_id = 'b3d5dc4a-95aa-4288-a075-cf876d702f0b'),
         null,
         RANDOM_UUID(),
         (SELECT id FROM sales_transaction WHERE total_amount = '200'),

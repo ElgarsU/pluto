@@ -12,7 +12,10 @@ import eu.skalaengineering.pluto.enums.Currency;
 import eu.skalaengineering.pluto.web.dto.CustomerActionDTO;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.MissingFormatArgumentException;
+import java.util.UUID;
 
 @Service
 public class CustomerActionService {
@@ -66,35 +69,45 @@ public class CustomerActionService {
 						.totalAmount(customerAction.salesTransactionData().totalAmount())
 						.build();
 				//Map sold products to products stored in DB
-				customerAction.salesTransactionData().soldProducts().forEach(productDTO -> {
-					productRepository
-							.findByProductId(productDTO.productId()).ifPresentOrElse(
-									//Case where we have found sold product in our DB
-									productEntity -> salesTransaction.addSoldProduct(SoldProductsEntity.builder()
+				customerAction.salesTransactionData().soldProducts().forEach(productDTO -> productRepository
+						.findByProductId(productDTO.productId()).ifPresentOrElse(
+								//Case where we have found sold product in our DB
+								productEntity -> salesTransaction.addSoldProduct(SoldProductsEntity.builder()
+										.quantity(productDTO.quantity())
+										.product(productEntity)
+										.build()),
+								//Case where we can't find the product, we create it with generic name and price
+								//This is for easier MVP testing only and needs to be refactored
+								() -> {
+									var newProduct = ProductEntity.builder()
+											.productId(productDTO.productId())
+											.productName("Generic name")
+											.productPrice(1)
+											.priceCurrency(Currency.EUR)
+											.build();
+									productRepository.save(newProduct);
+									salesTransaction.addSoldProduct(SoldProductsEntity.builder()
 											.quantity(productDTO.quantity())
-											.product(productEntity)
-											.build()),
-									//Case where we can't find the product, we create it with generic name and price
-									//This is for easier MVP testing only and needs to be refactored
-									() -> {
-										var newProduct = ProductEntity.builder()
-												.productId(productDTO.productId())
-												.productName("Generic name")
-												.productPrice(1)
-												.priceCurrency(Currency.EUR)
-												.build();
-										productRepository.save(newProduct);
-										salesTransaction.addSoldProduct(SoldProductsEntity.builder()
-												.quantity(productDTO.quantity())
-												.product(newProduct)
-												.build());
-									});
-				});
+											.product(newProduct)
+											.build());
+								}));
 				//Save sales transaction data and attach it to main action entity
 				salesTransactionDataRepository.save(salesTransaction);
 				actionToSave.salesTransaction(salesTransaction);
 			}
 		}
 		customerActionRepository.save(actionToSave.build());
+	}
+
+	public List<CustomerActionEntity> findSalesActionsInPeriod(LocalDateTime periodStart, LocalDateTime periodEnd, ActionType actionType) {
+		return customerActionRepository.findSalesActionsInPeriod(periodStart, periodEnd, actionType);
+	}
+
+	public List<CustomerActionEntity> findByActionTypeAndProductId(ActionType actionType, UUID productId) {
+		return customerActionRepository.findAllByActionTypeAndProductId(actionType, productId);
+	}
+
+	public long findCountByActionType(ActionType actionType) {
+		return customerActionRepository.countByActionType(actionType);
 	}
 }

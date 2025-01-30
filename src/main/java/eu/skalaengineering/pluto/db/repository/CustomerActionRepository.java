@@ -25,4 +25,9 @@ public interface CustomerActionRepository extends JpaRepository<CustomerActionEn
 	List<CustomerActionEntity> findSalesActionsInPeriod(@Param("periodStart") LocalDateTime periodStart,
 														@Param("periodEnd") LocalDateTime periodEnd,
 														@Param("actionType") ActionType purchaseCompleted);
+
+	long countByActionType(@Param("actionType") ActionType purchaseCompleted);
+
+	//We can of course return count here also, but I opted to use derived query methods here
+	List<CustomerActionEntity> findAllByActionTypeAndProductId(ActionType actionType, UUID productId);
 }
