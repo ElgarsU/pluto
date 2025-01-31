@@ -60,8 +60,7 @@ public class SalesConversionService {
 
 		//If we cant find the product, we cant calculate the conversion rate
 		if (product.isEmpty()) {
-			log.error("Product with id {} not found", productId);
-			return null;
+			throw new UnsupportedOperationException("Product with id %s not found".formatted(productId));
 		}
 
 		//To keep code organized, we have to map conversion type to action type
@@ -70,8 +69,7 @@ public class SalesConversionService {
 
 		//We assume that at least one product needs to be viewed OR added to cart to calculate conversion rate
 		if (addedToCartProducts.isEmpty()) {
-			log.error("Product named: {} has not been added to cart, can't calculate conversion rate", product.get().getProductName());
-			return null;
+			throw new UnsupportedOperationException("Product named: %s has not been added to cart, can't calculate conversion rate".formatted(product.get().getProductName()));
 		}
 
 		List<SoldProductsEntity> soldProducts = soldProductRepository.findAllByProduct(product.get());
@@ -91,8 +89,7 @@ public class SalesConversionService {
 		var purchaseActions = customerActionService.findCountByActionType(ActionType.PURCHASE_COMPLETED);
 		//We assume that at least one checkout action needs to be performed to calculate conversion rate
 		if (checkoutActions == 0) {
-			log.error("no checkout actions performed");
-			return null;
+			throw new UnsupportedOperationException("no checkout actions performed");
 		}
 		return ConversionRateDTO.builder()
 				.conversionType(ConversionType.CHECKOUT_PURCHASED)
