@@ -1,5 +1,3 @@
-# Application README
-
 ## Requirements to Run the Application
 
 - **IDE**: Any IDE suitable for Java development (e.g., IntelliJ IDEA, Eclipse).
@@ -28,21 +26,111 @@ You can interact with the pre-populated data via the application APIs or add new
 
 ## API Description & Usage
 
-1. **Customer Actions**:
-    - APIs to log customer actions such as viewing a product, adding to the cart, checking out, and completing purchases.
-      {provide request examples}
-
-2. **Sales Metrics**:
-    - APIs to fetch sales metrics including total sales in a specific period, and conversion rates for customer actions (e.g., viewed-to-purchased conversion rate).
-      {provide request examples}
-
-### Base URL
-
 The application's APIs can be accessed via the following base URL after starting the application:
 
 ```
 http://localhost:8080
 ```
+
+***Product API***:
+
+- `POST /secure/v1/products/create`<br>
+
+Creates product with provided data, needs a valid UUID.   
+Returns created product ID as UUID.
+
+```json
+{
+  "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "productName": "string",
+  "productPrice": 0.1,
+  "priceCurrency": "EUR"
+}
+```
+
+- `POST /secure/v1/products/get-all`<br>
+
+Returns all products from DB.
+
+***Customer Action API***:
+
+- `POST /secure/v1/customer-actions/log`<br>
+
+Logs a specific customer action.
+
+Action type: `PRODUCT_VIEWED`<br>
+Product ID must be a valid UUID from DB<br>
+Session ID is optional<br>
+
+```json
+{
+  "actionType": "PRODUCT_VIEWED",
+  "customerId": "635fffef-dfce-4f11-93e5-3c4e22e6db11",
+  "productId": "57edfb08-134f-4c06-868c-2a6e38ba03ab",
+  "sessionId": "9b64f1c5-c2c3-4571-9dfb-d7bedecfaf15"
+}
+```
+
+Action type: `PRODUCT_ADDED_TO_CART`<br>
+Product ID must be a valid UUID from DB<br>
+Session ID is optional<br>
+
+```json
+{
+  "actionType": "PRODUCT_ADDED_TO_CART",
+  "customerId": "635fffef-dfce-4f11-93e5-3c4e22e6db11",
+  "productId": "57edfb08-134f-4c06-868c-2a6e38ba03ab",
+  "sessionId": "9b64f1c5-c2c3-4571-9dfb-d7bedecfaf15"
+}
+```
+
+Action type: `CHECKOUT_STARTED`<br>
+Product ID is not needed<br>
+Session ID is optional<br>
+Customer has to have a previous action `PRODUCT_ADDED_TO_CART` to log this action
+
+```json
+{
+  "actionType": "CHECKOUT_STARTED",
+  "customerId": "635fffef-dfce-4f11-93e5-3c4e22e6db11",
+  "sessionId": "9b64f1c5-c2c3-4571-9dfb-d7bedecfaf15"
+}
+```
+
+Action type: `PURCHASE_COMPLETED`<br>
+Product ID is not needed<br>
+Session ID is optional<br>
+Customer has to have a previous action `CHECKOUT_STARTED` to log this action<br>
+Sales data CAN contains products that are not stored in DB<br>
+See comments in code, line 89 [CustomerActionService.java](./src/main/java/eu/skalaengineering/pluto/service/CustomerActionService.java)
+
+```json
+{
+  "actionType": "PURCHASE_COMPLETED",
+  "customerId": "635fffef-dfce-4f11-93e5-3c4e22e6db11",
+  "sessionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "salesTransactionData": {
+    "totalAmount": 0.1,
+    "soldProducts": [
+      {
+        "productId": "9b64f1c5-c2c3-4571-9dfb-d7bedecfaf15",
+        "quantity": 9007199254740991
+      }
+    ]
+  }
+}
+```
+
+***Sales Conversion API***:
+
+- `POST /secure/v1/conversion/total-sales`<br>
+
+Returns total sales amount for specified time period.
+
+- `POST /secure/v1/conversion/total-sales`<br>
+
+Logs a specific customer action.
+By providing any of the conversion types and valid product ID (if needed for conversion type), returns the calculated conversion type.
 
 ---
 
