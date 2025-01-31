@@ -58,15 +58,17 @@ public class SalesConversionService {
 	private ConversionRateDTO calculateConversionByTypeAndProduct(ConversionType conversionType, UUID productId) {
 		Optional<ProductEntity> product = productService.getProductById(productId);
 
+		//If we cant find the product, we cant calculate the conversion rate
 		if (product.isEmpty()) {
 			log.error("Product with id {} not found", productId);
 			return null;
 		}
 
+		//To keep code organized, we have to map conversion type to action type
 		ActionType actionType = ActionType.mapToActionType(conversionType);
-
 		List<CustomerActionEntity> addedToCartProducts = customerActionService.findByActionTypeAndProductId(actionType, product.get().getProductId());
 
+		//We assume that at least one product needs to be viewed OR added to cart to calculate conversion rate
 		if (addedToCartProducts.isEmpty()) {
 			log.error("Product named: {} has not been added to cart, can't calculate conversion rate", product.get().getProductName());
 			return null;
@@ -74,6 +76,7 @@ public class SalesConversionService {
 
 		List<SoldProductsEntity> soldProducts = soldProductRepository.findAllByProduct(product.get());
 
+		//Conversion rate calculations should probably be more elaborate than simple division
 		return ConversionRateDTO.builder()
 				.conversionType(conversionType)
 				.productName(product.get().getProductName())
@@ -86,6 +89,7 @@ public class SalesConversionService {
 	private ConversionRateDTO calculateCheckoutPurchasedConversionRate() {
 		var checkoutActions = customerActionService.findCountByActionType(ActionType.CHECKOUT_STARTED);
 		var purchaseActions = customerActionService.findCountByActionType(ActionType.PURCHASE_COMPLETED);
+		//We assume that at least one checkout action needs to be performed to calculate conversion rate
 		if (checkoutActions == 0) {
 			log.error("no checkout actions performed");
 			return null;

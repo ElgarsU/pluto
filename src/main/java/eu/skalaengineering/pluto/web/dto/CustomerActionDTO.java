@@ -10,8 +10,14 @@ import java.util.UUID;
 public record CustomerActionDTO(
 		ActionType actionType,
 		UUID customerId,
+
+		@Schema(description = "Optional for non product related actions")
 		UUID productId,
+
+		@Schema(description = "Optional for tracking multi step actions in a single session")
 		UUID sessionId,
+
+		@Schema(description = "Needs to be provided only when logging `PURCHASE_COMPLETED` action")
 		SalesTransactionDTO salesTransactionData
 ) {
 }
