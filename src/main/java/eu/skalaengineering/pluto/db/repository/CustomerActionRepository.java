@@ -9,13 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface CustomerActionRepository extends JpaRepository<CustomerActionEntity, Long> {
 
-	Optional<CustomerActionEntity> findCustomerActionByCustomerId(UUID customerId);
+	List<CustomerActionEntity> findCustomerActionsByCustomerId(UUID customerId);
 
 	@Query(value = """
 			SELECT ca FROM CustomerAction ca

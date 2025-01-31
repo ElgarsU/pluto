@@ -13,8 +13,8 @@ import eu.skalaengineering.pluto.web.dto.CustomerActionDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
-import java.util.MissingFormatArgumentException;
 import java.util.UUID;
 
 @Service
@@ -47,26 +47,27 @@ public class CustomerActionService {
 
 			case CHECKOUT_STARTED -> {
 				//Validate if customer has added any product to cart so we can log checkout
-				var previousAction = customerActionRepository.findCustomerActionByCustomerId(customerAction.customerId());
-				if (previousAction.isEmpty() || previousAction.get().getActionType() != ActionType.PRODUCT_ADDED_TO_CART) {
-					throw new UnsupportedOperationException("Customer does not have any valid previous action, can't log checkout started");
+				var previousAction = customerActionRepository.findCustomerActionsByCustomerId(customerAction.customerId());
+				if (previousAction.isEmpty() || previousAction.stream().noneMatch(it -> it.getActionType().equals(ActionType.PRODUCT_ADDED_TO_CART))) {
+					throw new UnsupportedOperationException("Customer does not have any logged action `PRODUCT_ADDED_TO_CART, can't log `CHECKOUT_STARTED` action");
 				}
 			}
 			case PURCHASE_COMPLETED -> {
 				//Validate if customer has started checkout so we can log purchase completed
-				var previousAction = customerActionRepository.findCustomerActionByCustomerId(customerAction.customerId());
-				if (previousAction.isEmpty() || previousAction.get().getActionType() != ActionType.CHECKOUT_STARTED) {
-					throw new UnsupportedOperationException("Customer does not have any valid previous action, can't log purchase completed");
+				var previousAction = customerActionRepository.findCustomerActionsByCustomerId(customerAction.customerId());
+				if (previousAction.isEmpty() || previousAction.stream().noneMatch(it -> it.getActionType().equals(ActionType.CHECKOUT_STARTED))) {
+					throw new UnsupportedOperationException("Customer does not have any logged action `CHECKOUT_STARTED, can't log `PURCHASE_COMPLETED` action");
 				}
 
 				if (customerAction.salesTransactionData() == null) {
 					//We assume that if sales transaction data object is present, all child objects and data will be present also
 					//This needs more elaborate validation in future
-					throw new MissingFormatArgumentException("Can not log purchase completed because we are missing sales transaction data");
+					throw new UnsupportedOperationException("Can not log purchase completed because we are missing sales transaction data");
 				}
 
 				var salesTransaction = SalesTransactionEntity.builder()
 						.totalAmount(customerAction.salesTransactionData().totalAmount())
+						.soldProducts(new HashSet<>())
 						.build();
 				//Map sold products to products stored in DB
 				customerAction.salesTransactionData().soldProducts().forEach(productDTO -> productRepository
