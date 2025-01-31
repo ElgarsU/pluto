@@ -21,13 +21,16 @@ import java.util.UUID;
 public class CustomerActionService {
 
 	private final CustomerActionRepository customerActionRepository;
+	private final ProductService productService;
 	private final ProductRepository productRepository;
 	private final SalesTransactionDataRepository salesTransactionDataRepository;
 
 	public CustomerActionService(CustomerActionRepository customerActionRepository,
+								 ProductService productService,
 								 ProductRepository productRepository,
 								 SalesTransactionDataRepository salesTransactionDataRepository) {
 		this.customerActionRepository = customerActionRepository;
+		this.productService = productService;
 		this.productRepository = productRepository;
 		this.salesTransactionDataRepository = salesTransactionDataRepository;
 	}
@@ -43,7 +46,13 @@ public class CustomerActionService {
 				.sessionId(customerAction.sessionId());
 
 		switch (customerAction.actionType()) {
-			case PRODUCT_VIEWED, PRODUCT_ADDED_TO_CART -> actionToSave.productId(customerAction.productId());
+			case PRODUCT_VIEWED, PRODUCT_ADDED_TO_CART -> {
+				var possibleProduct = productService.getProductById(customerAction.productId());
+				if (possibleProduct.isEmpty()) {
+					throw new UnsupportedOperationException("Provided product id does not map to any DB entry");
+				}
+				actionToSave.productId(possibleProduct.get().getProductId());
+			}
 
 			case CHECKOUT_STARTED -> {
 				//Validate if customer has added any product to cart so we can log checkout
@@ -70,8 +79,8 @@ public class CustomerActionService {
 						.soldProducts(new HashSet<>())
 						.build();
 				//Map sold products to products stored in DB
-				customerAction.salesTransactionData().soldProducts().forEach(productDTO -> productRepository
-						.findByProductId(productDTO.productId()).ifPresentOrElse(
+				customerAction.salesTransactionData().soldProducts().forEach(productDTO -> productService
+						.getProductById(productDTO.productId()).ifPresentOrElse(
 								//Case where we have found sold product in our DB
 								productEntity -> salesTransaction.addSoldProduct(SoldProductsEntity.builder()
 										.quantity(productDTO.quantity())

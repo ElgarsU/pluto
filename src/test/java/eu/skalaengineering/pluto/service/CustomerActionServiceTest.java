@@ -3,7 +3,9 @@ package eu.skalaengineering.pluto.service;
 import eu.skalaengineering.pluto.db.entity.CustomerActionEntity;
 import eu.skalaengineering.pluto.db.repository.CustomerActionRepository;
 import eu.skalaengineering.pluto.enums.ActionType;
+import eu.skalaengineering.pluto.enums.Currency;
 import eu.skalaengineering.pluto.web.dto.CustomerActionDTO;
+import eu.skalaengineering.pluto.web.dto.ProductDTO;
 import eu.skalaengineering.pluto.web.dto.SalesTransactionDTO;
 import eu.skalaengineering.pluto.web.dto.SoldProductDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +32,9 @@ class CustomerActionServiceTest {
 	@Autowired
 	private CustomerActionRepository customerActionRepository;
 
+	@Autowired
+	private ProductService productService;
+
 	private UUID productId;
 	private UUID customerId;
 	private UUID sessionId;
@@ -39,6 +44,13 @@ class CustomerActionServiceTest {
 		productId = UUID.randomUUID();
 		customerId = UUID.randomUUID();
 		sessionId = UUID.randomUUID();
+
+		productService.saveProduct(ProductDTO.builder()
+				.productId(productId)
+				.productName("Test Product")
+				.productPrice(10)
+				.priceCurrency(Currency.USD)
+				.build());
 	}
 
 	@Test

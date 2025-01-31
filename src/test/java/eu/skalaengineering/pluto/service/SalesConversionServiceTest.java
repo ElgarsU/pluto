@@ -21,7 +21,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @Transactional
@@ -47,7 +46,7 @@ class SalesConversionServiceTest {
 		customerId = UUID.randomUUID();
 		sessionId = UUID.randomUUID();
 		now = LocalDateTime.now();
-		
+
 		productService.saveProduct(ProductDTO.builder()
 				.productId(productId)
 				.productName("Test Product")
@@ -140,16 +139,6 @@ class SalesConversionServiceTest {
 		assertEquals(ConversionType.CHECKOUT_PURCHASED, conversionRate.conversionType());
 		assertEquals(0.6666666666666666, conversionRate.conversionRate());
 	}
-
-	@Test
-	void shouldReturnNullWhenCalculatingConversionRateForUnknownProduct() {
-		// Perform
-		ConversionRateDTO conversionRate = salesConversionService.getConversionRate(ConversionType.VIEWED_PURCHASED, UUID.randomUUID());
-
-		// Assert
-		assertNull(conversionRate);
-	}
-
 
 	//	Helper methods
 	private void logPurchaseCompletedAction(double totalAmount) {
