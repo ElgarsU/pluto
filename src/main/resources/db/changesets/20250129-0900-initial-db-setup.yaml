@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: PLT-0001
+      author: Elgars
+      comment: For DB setup testing purpose
+      changes:
+        - empty: {}

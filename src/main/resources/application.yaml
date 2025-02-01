@@ -1,0 +1,39 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+spring:
+  application:
+    name: pluto
+  datasource:
+    url: jdbc:h2:mem:sales_conversion;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  liquibase:
+    enabled: true
+    contexts: development
+    change-log: classpath:db/db.changelog-master.yaml
+
+management:
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health
+
+springdoc:
+  show-actuator: false

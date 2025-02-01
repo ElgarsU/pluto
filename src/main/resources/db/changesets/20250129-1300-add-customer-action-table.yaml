@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: PLT-0003
+      author: Elgars
+      comment: Add `customer_action` table
+      changes:
+        - sqlFile:
+            path: db/scripts/V1.01__add_customer_action_table.sql
