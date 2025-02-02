@@ -8,14 +8,55 @@
         <artifactId>pluto</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-
     <artifactId>frontend</artifactId>
     <packaging>pom</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.15.1</version>
+                <configuration>
+                    <!-- Set working directory to the Nuxt module folder -->
+                    <workingDirectory>${project.basedir}</workingDirectory>
+                </configuration>
+                <executions>
+                    <!-- Install Node and npm -->
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v18.16.1</nodeVersion>
+                            <npmVersion>9.5.1</npmVersion>
+                        </configuration>
+                    </execution>
 
-    <!--    <properties>-->
-    <!--        <maven.compiler.source>17</maven.compiler.source>-->
-    <!--        <maven.compiler.target>17</maven.compiler.target>-->
-    <!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-    <!--    </properties>-->
+                    <!-- Run npm install -->
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
 
+                    <!-- Build the Nuxt app -->
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
