@@ -1,19 +1,16 @@
-## Requirements to Run the Application
+# PLUTO - Backend
 
-- **IDE**: Any IDE suitable for Java development (e.g., IntelliJ IDEA, Eclipse).
-- **Java**: JDK 17 or higher must be configured on your machine.
-- **Maven**: Maven 3.9.x or higher for dependencies and builds.
-
----
-
-## Setup Instructions
+## Setup
 
 1. Clone the repository.
 2. Open the project in your IDE.
 3. Configure your IDE to use JDK 17 or higher.
-4. Run the application from your IDE.
+4. Run the application from your IDE with provided IntelliJ IDEA run configuration [backend](../.idea/runConfigurations/backend.xml).
 
 > **Note**: This application uses an in-memory H2 database. All data will be lost after a restart due to non-persistent storage.
+
+You can access the exposed backend APIs via Swagger URL
+`http://localhost:8080/swagger-ui/index.html#/`
 
 ---
 
@@ -101,8 +98,8 @@ Action type: `PURCHASE_COMPLETED`<br>
 Product ID is not needed<br>
 Session ID is optional<br>
 Customer has to have a previous action `CHECKOUT_STARTED` to log this action<br>
-Sales data CAN contains products that are not stored in DB<br>
-See comments in code, line 89 [CustomerActionService.java](backend/src/main/java/eu/skalaengineering/pluto/java.skalaengineering.pluto.service/CustomerActionService.java)
+Sales data CAN contain products that are not stored in DB<br>
+See comments in code, line 89 [CustomerActionService.java](src/main/java/skalaengineering/pluto/service/CustomerActionService.java)
 
 ```json
 {

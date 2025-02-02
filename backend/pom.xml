@@ -4,10 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <description>E-Commerce Sales Conversion - BACKEND</description>
     <artifactId>backend</artifactId>
+    <version>0.0.1</version>
     <parent>
-        <groupId>eu.skalaengineering</groupId>
-        <artifactId>pluto</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
@@ -86,13 +88,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.security</groupId>-->
         <!--            <artifactId>spring-security-test</artifactId>-->

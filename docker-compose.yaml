@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # You can set any environment variables needed for your Spring Boot app here
+      - SPRING_PROFILES_ACTIVE=local
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Pass the API base URL to your Nuxt app so it knows where your backend lives.
+      # Docker Compose service names resolve as hostnames, so "backend" will resolve to the Spring Boot container.
+      - API_BASE=http://backend:8080/api
+    depends_on:
+      - backend
