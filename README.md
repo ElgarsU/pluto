@@ -102,7 +102,7 @@ Product ID is not needed<br>
 Session ID is optional<br>
 Customer has to have a previous action `CHECKOUT_STARTED` to log this action<br>
 Sales data CAN contains products that are not stored in DB<br>
-See comments in code, line 89 [CustomerActionService.java](./src/main/java/eu/skalaengineering/pluto/service/CustomerActionService.java)
+See comments in code, line 89 [CustomerActionService.java](backend/src/main/java/eu/skalaengineering/pluto/java.skalaengineering.pluto.service/CustomerActionService.java)
 
 ```json
 {
