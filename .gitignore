@@ -1,8 +1,9 @@
 ### IntelliJ IDEA ###
 *.iws
-#*.iml
+*.iml
 *.ipr
-#.idea
+.idea
+*.idea
 
 ### NetBeans ###
 /nbproject/private/
